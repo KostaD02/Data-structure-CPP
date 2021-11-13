@@ -4,7 +4,7 @@
 
 using namespace std; //standartul saxelta sivrce
 
-class Node { // Avgwerot node stakshi
+class Node { // Avgwerot node klasi
 	public: //gia velis cvladebi
 		string data; //avgwerot data cvladi
 		Node* next; //avgwerot next mnishvneloba node tipad
