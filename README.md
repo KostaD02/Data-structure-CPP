@@ -1,2 +1,3 @@
-# Stack-in-C
-Simple stack written in c++
+# Data structure for C++
+
+main.cpp contains : node , stack , queue , list implementations 
