@@ -1,149 +1,225 @@
-#include <iostream> //standartuli input/output stremebis biblioteka
-#include <string> //stringebis biblioteka 
-#include <cstdlib> //damatebiti funqciebis shemotana
+#include <iostream> 
 
-using namespace std; //standartul saxelta sivrce
+using namespace std; 
 
-class Node { // Avgwerot node klasi
-	public: //gia velis cvladebi
-		string data; //avgwerot data cvladi
-		Node* next; //avgwerot next mnishvneloba node tipad
+template <typename T> class Node { 
+	public: 
+		T data; 
+		Node* next; 
 };
 
-class Stack { // Gamovacxadot klasis staki sakutrebirvad 
-	private: //daxuruli velis cvladebi
-		Node* head; //gamovacxadot node klasis tipis satavo elementi
-		int length; //gamovacxadot sigrdze
-	public: //gia velis cvladebi
-		Stack(){ //konstruqtori
-			head = NULL; //tavidan head mnishvnelobas mivaniwot null 
-			length = 0; //tavidan sigrdzes mivaniwot 0
+template <typename T> class Stack{
+	private:
+		Node<T> *head;
+		unsigned int length;
+	public:
+		Stack(){
+			head = NULL;
+			length = 0;
 		}
-	//gamovacxadot prototipi funqciebi romlebsac shemdgomshi avgwert
-	void push(std::string); //avgwerot damatebis funqcia
-	string pop(); //avgwerot amogebis funqcia
-	string peek(); // gamovitanot satavo elementi 
-	void printStack(); //avgwerot stekis gamotanis funqcia
-	bool isEmpty(); //avgwerot funqcia romelic dagvibrunebs mnishvnelobas aris tu ara steki carieli
+		bool isEmpty(){
+			return head == NULL;
+		}
+		void push(T data){
+			Node<T> *newnode = new Node<T>;
+			newnode->data = data;
+			newnode->next = head;
+			head = newnode;
+			this->length++;
+		}
+		T pop(){
+			if(isEmpty()){
+				cout<<"Can't pop element , stack is empty"<<endl;
+				exit(0);
+			}
+			T returnData;
+			returnData = head->data;
+			Node<T> *deleteNode = head;
+			head = head->next;
+			delete deleteNode;
+			this->length--;
+			return returnData;
+		}
+		void print(){
+			if(head == NULL){
+				cout<<"Stack is empty\n";
+			}
+			Node<T> *iNode = head;
+			for(int i=0;i<length;i++){
+				cout<<iNode->data<<" ";
+				iNode = iNode->next;
+			}
+		}
+		T peek(){
+			if(isEmpty()){
+				cout<<"Can't peek element , stack is empty"<<endl;
+				exit(0);
+			}
+			return head->data;
+		}
+		unsigned int getLength(){
+			return this->length;
+		}
 };
 
-void Stack::push(string data) { //vacxadebt funqcias romelitac stekshi axal elements davamatebt
-	Node* newnode = new Node(); //gamovyot axali mexsierebis ubani
-	newnode->data = data; //mivaniwot mas mnishvneloba 
-	newnode->next = head; //mivaniwot mas satavo elementi
-	head = newnode; //satavo elements mivaniwot axali sheqmnili node elementi
-	length++; //sigrdze gavzardot ertit
-}
-
-string Stack::pop() { //vacxadebt funqcias romelitac stekidan vagdebt satavo mnishvnelobas
-	if (isEmpty()){ //shevamowmot aris tu ara steki carieli
-		cout<<" Steki carielia elementebs ver gamovitant"<<endl; //vamcnobot momxarebels rom steki carielia da elementi ar aris masshi
-		return "\0"; //vabrunebt stringis mnishvnelobas
-	}
-	//radganac carieli ar aris gavaketot shemdgomi moqmedebebi
-	std::string returnData = ""; //vqmnit dasabrunebel mnishvnelobas radganac stekidan amogebuli elementis dakargva ar gvinda
-	returnData = head->data; //vaniwebt amosageb mnishvnelobas
-	Node* deleteNode = head; //vacxadebt nodis tipis elements da vaniwebt mas satavo elemnts
-	head = head->next; //satavo elements vxdit shemdgom elements
-	delete deleteNode; //vshlit elements radgan ar gvinda mexsiereba daitvirtos
-	length--; //radganac elementi amoviget misi sigrdzec unda shemcirdes 
-	return returnData; //vabrunebt amogebul elements
-}
-
-
-string Stack::peek() { //vacxadebt funqcias romelitac vbewdavt satavo elements
-	if (isEmpty()){ //vamowmebt aris tu ara steki carieli
-		cout<<" Steki carielia elementebs ver gamovitant"<<endl; //vamcnobot momxarebels rom steki carielia da elementi ar aris masshi
-		return "\0"; //vabrunebt stringis mnishvnelobas
-	}
-	return head->data; //vabrunebt satavo elements
-}
-
-void Stack::printStack() { //vacxadebt funqcias romelitac shesadzlebeli iqneba stekebis elementebis gamotana
-	if (head == NULL){ //vamowmebt satavo elementi udris tu ara null
-		cout<<" Steki carielia elementebs ver gamovitant"<<endl; //radganac satavo elementi null aris , sheudzelbelia shemdgomi elementis dabewvda
-	}
-	Node* iNode = head; //vacxadebt node tipis axal cvlads da vaniwebt mas satavo elements
-	cout<<" "; // carieli sapce
-	for(int i=0; i<length; i++){ //daviwyot cikli 0 dan stekis elementebis dasasrulamde
-		cout<<iNode->data<<" "; //gamogvaqvs mnishnveloba
-		iNode = iNode->next; //vaniwebt shemdgom elements
-	}
-	cout<<endl; //vizualze xazis dasasruli
-}
-
-bool Stack::isEmpty() { //vacxadebt funqcias romelitac davadgent aris tu ara steki carieliv
-	if (head == NULL) return true; //vamowmebt aris tu ara steki carieli , tu carielia vabrunebt trues
-	else return false; //vabrunebt false
-}
-
-void menu(){ //vacxadebt menu funcqias
-	Stack myStack; //vacxadebt steks
-	string data = ""; //vacxadebt data mnishnvelobas
-	string returnData = ""; //vacxadebt dasabrunebel mnishvnelobas
-	char userChoise = 'k'; //vacxadebt momxareblis archevans
-	while(true){ //usasrulo cikli
-		system("CLS"); //vizualis gasuftaveba
-		cout<<"===============================\n"; //vizualizacia
-		cout<<"= Stekebi da mati gamoyeneba  =\n"; //vizualizacia
-		cout<<"===============================\n"; //vizualizacia
-		cout<<"= Airchiet sasruveli varianti =\n"; //vizualizacia
-		cout<<"===============================\n"; //vizualizacia
-		cout<<"= 1)Elementis damateba        =\n"; //vizualizacia
-		cout<<"= 2)Elementis amogdeba        =\n"; //vizualizacia
-		cout<<"= 3)Satavo elementis gamotana =\n"; //vizualizacia
-		cout<<"= 4)Carielia steki ?          =\n"; //vizualizacia 
-		cout<<"= 5)Stekis gamotana           =\n"; //vizualizacia
-		cout<<"= 6)Kodis avtori              =\n"; //vizualizacia
-		cout<<"= 7)Programis gatishva        =\n"; //vizualizacia
-		cout<<"===============================\n"; //vizualizacia
-		cout<<" Tqveni archevani : ";cin>>userChoise; //momxmarebels vtxovt rom sheiyvanos archevani
-		if(userChoise == '1'){ 
-			//elementis damateba
-			cout<<" Sheiyvanet elementi : ";cin>>data; //momxarebels sheyavs monacemi
-			myStack.push(data); //monacemi shegvyavs stekshi
-		}else if(userChoise == '2'){
-			//elementis amogdeba
-			returnData = myStack.pop(); //dasabrunebel cvlads vaniwebt stekidan amovardnil mnishnvelobas
-			if(!returnData.empty()){ //vamomwebt stekis sicarielese
-				cout<<" Amovarda : "<<returnData<<endl; //vachvnebt momxarebls amovardnil elements
+template <typename T> class Queue{ 
+	private: 
+		Stack<T> inputStack;
+		Stack<T> outputStack;
+	public:
+		void enQueue(T data){
+			while(!inputStack.isEmpty()){
+				outputStack.push(inputStack.pop());
 			}
-			system("PAUSE"); //dapauzeba rom sheamchnios momxmarebelma ra amovarda
-		}else if(userChoise == '3'){ 
-			//satavo elementis gamoatna
-			returnData = myStack.peek(); //dasabrunebel mnishnvelobas vaniwebt satavo elementis mnishnvelobas
-			if(!returnData.empty()){ //vamowmebt stekis sicarielese
-				cout<<" Satavo elementi : "<<returnData<<endl; //gamogvaqvs momxareblistvis satavo elementi
+			inputStack.push(data);
+			while(!outputStack.isEmpty()){
+				inputStack.push(outputStack.pop());
 			}
-			system("PAUSE"); //dapauzeba rom sheamchnios momxmarebelma ra amovarda
-		}else if(userChoise == '4'){
-			//carielia tu ara steki
-			if(myStack.isEmpty()){ //vamowmebt stekis sicarielese
-				cout<<" Steki carielia "<<endl; //vachvenebt momxarebels ro steki aris carieli
-			}else{ //danarcheni situacia
-				cout<<" Steki ar aris carieli "<<endl; //vachvenebt momxarebels ro steki ar aris carieli
-			}
-			system("PAUSE"); //vacherebt programas rom moxmarebelma dainaxos mititeba
-		}else if(userChoise == '5'){
-			//mteli stekis gamotana
-			cout<<" Stekis elementebi : \n"; //vizualizacia
-			myStack.printStack(); //gamovaqvs mteli steki
-			system("PAUSE"); //vacherebt programas rom moxmarebelma dainaxos mititeba
-		}else if(userChoise == '6'){
-			//kodis avtoris chveneba
-			cout<<" Code by Konstantine Datunishvili"<<endl; //vizualizacia
-			cout<<" Github : https://github.com/kostad02"<<endl; //vizualizacia
-			cout<<" Github repository : https://github.com/KostaD02/Stack-in-C"<<endl; //vizualizacia
-			system("PAUSE");//vacherebt programas rom moxmarebelma dainaxos mititeba
-		}else if(userChoise == '7'){
-			exit(0); //gamovdivart menu funqciidan
-		}else{
-			menu(); //araswori input vidzaxebt tavidan
 		}
-	}
-}
+		T deQueue(){
+			if(inputStack.isEmpty()){
+				cout<<"Queue is empty"<<endl;
+				exit(0);
+			}
+			return inputStack.pop();
+		}
+		void print(){
+			while(!inputStack.isEmpty()){
+				outputStack.push(inputStack.pop());
+			}
+			while(!outputStack.isEmpty()){
+				cout<<outputStack.peek()<<" ";
+				inputStack.push(outputStack.pop());
+			}
+		}
+		unsigned int getLength(){
+			return inputStack.getLength();
+		}
+		bool isEmpty(){
+			return inputStack.isEmpty();
+		}
+		T peek(){
+			if(isEmpty()){
+				cout<<"Can't peek element , queue is empty"<<endl;
+				exit(0);
+			}
+			return inputStack.peek();
+		}	
+};
 
-int main(int argc, char** argv) { //main funqcia
-	menu(); //vidzaxebt menu funqcias
-	return 0; //warmatebit dasruleba
+template <typename T> class List{
+	private:
+		Node<T> *head;
+		Node<T> *tail;
+	public:
+		List(){
+			head = NULL;
+			tail = NULL;
+		}
+		void insertStart(T value){
+			Node<T> *temp = new Node<T>;
+			temp->data = value;
+			temp->next = head;
+			head = temp;
+		}
+		void insertEnd(T value){
+			Node<T> *temp = new Node<T>;
+			temp->data = value;
+			temp->next = NULL;
+			if(head == NULL){
+				head = temp;
+				tail = temp;
+				temp = NULL;
+			}else{
+				tail->next = temp;
+				tail = temp;
+			}
+		}
+		void insertByPosition(unsigned int position,T value){
+			Node<T> *previous = new Node<T>;
+			Node<T> *current = new Node<T>;
+			Node<T> *temp = new Node<T>;
+			current = head;
+			for(int i=1;i<position;i++){
+				previous = current;
+				current = current->next;
+			}
+			temp->data = value;
+			previous->next = temp;
+			temp->next = current;
+		}
+		T deleteFirst(){
+			if(head == NULL){
+				cout<<"Can't delete any value ,List is empty"<<endl;
+				exit(0);
+			}
+			Node<T> *temp = new Node<T>;
+			temp = head;
+			T returnValue = head->data;
+			head=head->next;
+			delete temp;
+			return returnValue;
+		}
+		T deleteLast(){
+			if(head == NULL){
+				cout<<"Can't delete any value ,List is empty"<<endl;
+				exit(0);
+			}
+			Node<T> *current = new Node<T>;
+			Node<T> *previous = new Node<T>;
+			current = head;
+			while(current->next != NULL){
+				previous = current;
+				current = current->next;
+			}
+			tail = previous;
+			previous->next = NULL;
+			T returnValue = current->data;
+			delete current;
+			return returnValue;
+		}
+		T deleteByPosition(unsigned int position){
+			if(head == NULL){
+				cout<<"Can't delete any value ,List is empty"<<endl;
+				exit(0);
+			}
+			Node<T> *current = new Node<T>;
+			Node<T> *previous = new Node<T>;
+			current = head;
+			for(int i=0;i<position;i++){
+				previous = current;
+				current = current->next;
+			}
+			previous->next = current->next;
+			return previous->data;
+		}
+		void print(){
+			if(head == NULL){
+				cout<<"List is empty"<<endl;
+				exit(0);
+			}
+			Node<T> *temp = new Node<T>;
+			temp = head;
+			while(temp!=NULL){
+				cout<<temp->data<<" ";
+				temp = temp->next;
+			}
+		}
+		void reverse(){
+			Node<T> *current = head;
+			Node<T> *previous = NULL;
+			Node<T> *next = NULL;
+			while(current != NULL){
+				next = current->next;
+				current->next = previous;
+				previous = current;
+				current = next;
+			}
+			head = previous;
+		}		
+};
+
+int main(int argc, char** argv) { 
+	
+	return 0; 
 }
